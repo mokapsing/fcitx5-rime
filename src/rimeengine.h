@@ -26,6 +26,7 @@
 #include <fcitx/menu.h>
 #include <memory>
 #include <rime_api.h>
+#include <string>
 #include <unordered_map>
 
 #ifndef FCITX_RIME_NO_DBUS
@@ -36,11 +37,19 @@ namespace fcitx {
 
 class RimeState;
 
+enum class SharedStatePolicy { FollowGlobalConfig, All, Program, No };
+
+FCITX_CONFIG_ENUM_NAME_WITH_I18N(SharedStatePolicy,
+                                 N_("Follow Global Configuration"), N_("All"),
+                                 N_("Program"), N_("No"));
+
 FCITX_CONFIGURATION(
     RimeEngineConfig,
     Option<bool> showPreeditInApplication{this, "PreeditInApplication",
                                           _("Show preedit within application"),
                                           true};
+    Option<SharedStatePolicy> sharedStatePolicy{
+        this, "InputState", _("Shared Input State"), SharedStatePolicy::All};
     Option<bool> preeditCursorPositionAtBeginning{
         this, "PreeditCursorPositionAtBeginning",
         _("Fix embedded preedit cursor at the beginning of the preedit"), true};
@@ -113,6 +122,7 @@ public:
 #endif
 
     void blockNotificationFor(uint64_t usec);
+    const auto &schemas() const { return schemas_; }
 
 private:
     static void rimeNotificationHandler(void *context_object,
@@ -131,6 +141,8 @@ private:
     void refreshStatusArea(InputContext &ic);
     void refreshStatusArea(RimeSessionId session);
     void updateStatusArea(RimeSessionId session);
+    void refreshSessionPoolPolicy();
+    PropertyPropagatePolicy getSharedStatePolicy();
 
     std::string sharedDataDir_;
     IconTheme theme_;
@@ -152,6 +164,7 @@ private:
 
     FCITX_ADDON_DEPENDENCY_LOADER(notifications, instance_->addonManager());
 
+    std::unordered_set<std::string> schemas_;
     std::list<SimpleAction> schemActions_;
     std::unordered_map<std::string, std::list<std::unique_ptr<Action>>>
         optionActions_;
@@ -159,7 +172,6 @@ private:
 #ifdef FCITX_RIME_LOAD_PLUGIN
     std::unordered_map<std::string, Library> pluginPool_;
 #endif
-    std::unique_ptr<EventSourceTime> timeEvent_;
     std::unique_ptr<HandlerTableEntry<EventHandler>> globalConfigReloadHandle_;
 
 #ifndef FCITX_RIME_NO_DBUS
