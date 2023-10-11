@@ -250,17 +250,17 @@ RimeEngine::RimeEngine(Instance *instance)
     : instance_(instance), api_(EnsureRimeApi()),
       factory_([this](InputContext &ic) { return new RimeState(this, ic); }),
       sessionPool_(this, getSharedStatePolicy()) {
-#ifdef __ANDROID__
-    const auto &sp = fcitx::StandardPath::global();
-    std::string defaultYaml =
-        sp.locate(fcitx::StandardPath::Type::Data, "rime-data/default.yaml");
-    if (defaultYaml.empty()) {
-        throw std::runtime_error("Fail to locate shared data directory");
+    if constexpr (isAndroid()) {
+        const auto &sp = fcitx::StandardPath::global();
+        std::string defaultYaml = sp.locate(fcitx::StandardPath::Type::Data,
+                                            "rime-data/default.yaml");
+        if (defaultYaml.empty()) {
+            throw std::runtime_error("Fail to locate shared data directory");
+        }
+        sharedDataDir_ = fcitx::fs::dirName(defaultYaml);
+    } else {
+        sharedDataDir_ = RIME_DATA_DIR;
     }
-    sharedDataDir_ = fcitx::fs::dirName(defaultYaml);
-#else
-    sharedDataDir_ = RIME_DATA_DIR;
-#endif
     imAction_ = std::make_unique<IMAction>(this);
     instance_->userInterfaceManager().registerAction("fcitx-rime-im",
                                                      imAction_.get());
@@ -601,15 +601,15 @@ void RimeEngine::notify(RimeSessionId session, const std::string &messageType,
                         "seconds. Please wait until it is finished...");
         } else if (messageValue == "success") {
             message = _("Rime is ready.");
-            updateSchemaMenu();
-            refreshStatusArea(0);
             if (!api_->is_maintenance_mode()) {
                 api_->deploy_config_file("fcitx5.yaml", "config_version");
                 updateAppOptions();
             }
+            updateSchemaMenu();
+            refreshStatusArea(0);
         } else if (messageValue == "failure") {
             message = _("Rime has encountered an error. "
-                        "See /tmp/rime.fcitx.ERROR for details.");
+                        "See log for details.");
         }
     } else if (messageType == "option") {
         icon = "fcitx-rime";
@@ -689,9 +689,12 @@ std::string RimeEngine::subModeIconImpl(const InputMethodEntry &,
     return result;
 }
 
-void RimeEngine::releaseAllSession() {
-    instance_->inputContextManager().foreach([this](InputContext *ic) {
+void RimeEngine::releaseAllSession(const bool snapshot) {
+    instance_->inputContextManager().foreach([&](InputContext *ic) {
         if (auto state = this->state(ic)) {
+            if (snapshot) {
+                state->snapshot();
+            }
             state->release();
         }
         return true;
@@ -707,16 +710,8 @@ void RimeEngine::deploy() {
 
 void RimeEngine::sync() {
     RIME_DEBUG() << "Rime Sync user data";
-
-    instance_->inputContextManager().foreach([this](InputContext *ic) {
-        if (auto state = this->state(ic)) {
-            state->snapshot();
-            state->release();
-        }
-        return true;
-    });
+    releaseAllSession(true);
     api_->sync_user_data();
-    releaseAllSession();
 }
 
 void RimeEngine::updateActionsForSchema(const std::string &schema) {
