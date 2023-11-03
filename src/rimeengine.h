@@ -8,6 +8,7 @@
 
 #include "rimesession.h"
 #include "rimestate.h"
+#include <cstdint>
 #include <fcitx-config/configuration.h>
 #include <fcitx-config/iniparser.h>
 #include <fcitx-utils/event.h>
@@ -77,6 +78,12 @@ FCITX_CONFIGURATION(
 #endif
 );
 
+class RimeOptionAction : public Action {
+public:
+    // This is used to save the option when we need to release the session.
+    virtual std::optional<std::string> snapshotOption(InputContext *ic) = 0;
+};
+
 class RimeEngine final : public InputMethodEngineV2 {
 public:
     RimeEngine(Instance *instance);
@@ -123,6 +130,7 @@ public:
 
     void blockNotificationFor(uint64_t usec);
     const auto &schemas() const { return schemas_; }
+    const auto &optionActions() const { return optionActions_; };
 
 private:
     static void rimeNotificationHandler(void *context_object,
@@ -152,6 +160,7 @@ private:
     rime_api_t *api_;
     static bool firstRun_;
     uint64_t blockNotificationBefore_ = 0;
+    uint64_t lastKeyEventTime_ = 0;
     FactoryFor<RimeState> factory_;
 
     std::unique_ptr<Action> imAction_;
@@ -167,7 +176,8 @@ private:
 
     std::unordered_set<std::string> schemas_;
     std::list<SimpleAction> schemActions_;
-    std::unordered_map<std::string, std::list<std::unique_ptr<Action>>>
+    std::unordered_map<std::string,
+                       std::list<std::unique_ptr<RimeOptionAction>>>
         optionActions_;
     Menu schemaMenu_;
 #ifdef FCITX_RIME_LOAD_PLUGIN
