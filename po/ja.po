@@ -62,9 +62,13 @@ msgstr "全角は有効です。"
 msgid "Half Shape is enabled."
 msgstr "半角は有効です。"
 
-#: src/rimestate.cpp:67 src/rimeengine.cpp:822
+#: src/rimestate.cpp:67 src/rimeengine.cpp:828
 msgid "Latin Mode"
 msgstr "ラテンモード"
+
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
+msgstr ""
 
 #: src/rimeengine.h:77
 msgid "Load available plugins automatically"

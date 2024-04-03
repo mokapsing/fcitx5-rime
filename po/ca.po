@@ -60,8 +60,12 @@ msgstr ""
 msgid "Half Shape is enabled."
 msgstr ""
 
-#: src/rimestate.cpp:67 src/rimeengine.cpp:822
+#: src/rimestate.cpp:67 src/rimeengine.cpp:828
 msgid "Latin Mode"
+msgstr ""
+
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
 msgstr ""
 
 #: src/rimeengine.h:77

@@ -65,9 +65,13 @@ msgstr "已啟用全形字符。"
 msgid "Half Shape is enabled."
 msgstr "已啟用半形字符。"
 
-#: src/rimestate.cpp:67 src/rimeengine.cpp:822
+#: src/rimestate.cpp:67 src/rimeengine.cpp:828
 msgid "Latin Mode"
 msgstr "羅馬拼音模式"
+
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
+msgstr "下一个方案"
 
 #: src/rimeengine.h:77
 msgid "Load available plugins automatically"

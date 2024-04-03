@@ -60,9 +60,13 @@ msgstr "전각이 활성화되었습니다."
 msgid "Half Shape is enabled."
 msgstr "반각이 활성화되었습니다."
 
-#: src/rimestate.cpp:67 src/rimeengine.cpp:822
+#: src/rimestate.cpp:67 src/rimeengine.cpp:828
 msgid "Latin Mode"
 msgstr "로마자 모드"
+
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
+msgstr ""
 
 #: src/rimeengine.h:77
 msgid "Load available plugins automatically"

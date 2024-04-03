@@ -65,6 +65,10 @@ msgstr ""
 msgid "Latin Mode"
 msgstr ""
 
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
+msgstr ""
+
 #: src/rimeengine.h:78
 msgid "Load available plugins automatically"
 msgstr ""

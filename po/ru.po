@@ -63,9 +63,13 @@ msgstr "Полноширинная форма включена."
 msgid "Half Shape is enabled."
 msgstr "Полуширинная форма включена."
 
-#: src/rimestate.cpp:67 src/rimeengine.cpp:822
+#: src/rimestate.cpp:67 src/rimeengine.cpp:828
 msgid "Latin Mode"
 msgstr "Режим Латиницы"
+
+#: src/rimeengine.cpp:858
+msgid "Next Schema"
+msgstr ""
 
 #: src/rimeengine.h:77
 msgid "Load available plugins automatically"

@@ -120,6 +120,36 @@ void RimeState::selectSchema(const std::string &schema) {
     api->select_schema(session(), schema.data());
 }
 
+void RimeState::switchNextSchema() {
+    std::string currentSchemaId;
+    std::string targetSchemaId;
+    const auto& schemas = engine_->schemas();
+    auto api = engine_->api();
+    if (api->is_maintenance_mode()) {
+        return;
+    }
+    getStatus([&currentSchemaId](const RimeStatus &status) {
+        currentSchemaId = status.schema_id ? status.schema_id : "";
+    });
+    if (currentSchemaId.empty()) {
+        return;
+    }
+    targetSchemaId = *schemas.begin();
+    if (!schemas.empty()) {
+        auto it = std::find(schemas.begin(), schemas.end(), currentSchemaId);
+	if (it != schemas.end() && std::next(it) != schemas.end()) {
+            targetSchemaId = *std::next(it);
+        }
+    }
+    if (targetSchemaId.empty()) {
+        return;
+    }
+    engine_->blockNotificationFor(30000);
+    api->set_option(session(), RIME_ASCII_MODE, false);
+    api->select_schema(session(), targetSchemaId.data());
+    return;
+}
+
 void RimeState::keyEvent(KeyEvent &event) {
     auto api = engine_->api();
     if (api->is_maintenance_mode()) {
@@ -388,7 +418,7 @@ void RimeState::restore() {
     if (savedCurrentSchema_.empty()) {
         return;
     }
-    if (!engine_->schemas().count(savedCurrentSchema_)) {
+    if (!std::count(engine_->schemas().begin(), engine_->schemas().end(), savedCurrentSchema_)) {
         return;
     }
 
