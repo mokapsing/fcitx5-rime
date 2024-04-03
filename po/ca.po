@@ -129,3 +129,7 @@ msgstr "Sincronitza"
 #: src/rimeengine.h:100
 msgid "User data dir"
 msgstr ""
+
+#: src/rimeengine.cpp:718
+msgid "Next Schema"
+msgstr ""

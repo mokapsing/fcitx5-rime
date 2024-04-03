@@ -134,3 +134,7 @@ msgstr "同步"
 #: src/rimeengine.h:100
 msgid "User data dir"
 msgstr "使用者資料夾"
+
+#: src/rimeengine.cpp:718
+msgid "Next Schema"
+msgstr "下一个方案"

@@ -208,7 +208,7 @@ private:
 
     FCITX_ADDON_DEPENDENCY_LOADER(notifications, instance_->addonManager());
 
-    std::unordered_set<std::string> schemas_;
+    std::vector<std::string> schemas_;
     std::list<SimpleAction> schemActions_;
     std::unordered_map<std::string,
                        std::list<std::unique_ptr<RimeOptionAction>>>

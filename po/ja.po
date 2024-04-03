@@ -133,3 +133,7 @@ msgstr "同期"
 #: src/rimeengine.h:100
 msgid "User data dir"
 msgstr "ユーザーデータディレクトリ"
+
+#: src/rimeengine.cpp:718
+msgid "Next Schema"
+msgstr ""
