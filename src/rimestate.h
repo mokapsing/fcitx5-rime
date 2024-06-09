@@ -15,6 +15,7 @@
 #include <memory>
 #include <rime_api.h>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #define RIME_ASCII_MODE "ascii_mode"
@@ -53,9 +54,13 @@ public:
 
     void snapshot();
     void restore();
+    std::string currentSchema();
+    void addChangedOption(std::string_view option);
+    void showChangedOptions();
 
 private:
     void maybeSyncProgramNameToSession();
+    std::vector<std::string> snapshotOptions(const std::string &schema);
 
     std::string lastMode_;
     RimeEngine *engine_;
@@ -64,6 +69,7 @@ private:
 
     std::string savedCurrentSchema_;
     std::vector<std::string> savedOptions_;
+    std::vector<std::string> changedOptions_;
 };
 } // namespace fcitx
 
