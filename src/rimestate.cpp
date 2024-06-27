@@ -155,7 +155,7 @@ void RimeState::selectSchema(const std::string &schema) {
 void RimeState::switchNextSchema() {
     std::string currentSchemaId;
     std::string targetSchemaId;
-    const auto& schemas = engine_->schemas();
+    const auto &schemas = engine_->schemas();
     auto api = engine_->api();
     if (api->is_maintenance_mode()) {
         return;
@@ -169,7 +169,7 @@ void RimeState::switchNextSchema() {
     targetSchemaId = *schemas.begin();
     if (!schemas.empty()) {
         auto it = std::find(schemas.begin(), schemas.end(), currentSchemaId);
-	if (it != schemas.end() && std::next(it) != schemas.end()) {
+        if (it != schemas.end() && std::next(it) != schemas.end()) {
             targetSchemaId = *std::next(it);
         }
     }
@@ -525,7 +525,8 @@ void RimeState::restore() {
     if (savedCurrentSchema_.empty()) {
         return;
     }
-    if (!std::count(engine_->schemas().begin(), engine_->schemas().end(), savedCurrentSchema_)) {
+    if (!std::count(engine_->schemas().begin(), engine_->schemas().end(),
+                    savedCurrentSchema_)) {
         return;
     }
 

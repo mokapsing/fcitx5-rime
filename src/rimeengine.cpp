@@ -756,18 +756,18 @@ void RimeEngine::updateSchemaMenu() {
             schemas_.push_back(schemaId);
         }
         api_->free_schema_list(&list);
-        
+
         schemActions_.emplace_back();
         auto &schemaAction = schemActions_.back();
         schemaAction.setShortText(_("Next Schema"));
-        schemaAction.connect<SimpleAction::Activated>(
-            [this](InputContext *ic) {
-                auto state = ic->propertyFor(&factory_);
-                blockNotificationFor(30000);
-                state->switchNextSchema();
-                imAction_->update(ic);
-            });
-        instance_->userInterfaceManager().registerAction("fcitx-rime-next-schema", &schemaAction);
+        schemaAction.connect<SimpleAction::Activated>([this](InputContext *ic) {
+            auto state = ic->propertyFor(&factory_);
+            blockNotificationFor(30000);
+            state->switchNextSchema();
+            imAction_->update(ic);
+        });
+        instance_->userInterfaceManager().registerAction(
+            "fcitx-rime-next-schema", &schemaAction);
         schemaMenu_.insertAction(&separatorAction_, &schemaAction);
     }
 }
