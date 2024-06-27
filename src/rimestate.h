@@ -18,7 +18,7 @@
 #include <string_view>
 #include <vector>
 
-#define RIME_ASCII_MODE "ascii_mode"
+#define RIME_ASCII_MODE       "ascii_mode"
 #define FCITX_HIDE_CANDIDATES "_hide_candidate"
 
 namespace fcitx {
